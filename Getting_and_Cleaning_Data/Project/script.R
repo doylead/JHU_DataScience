@@ -67,13 +67,13 @@ reformat_feature <- function(original){
   original <- substring(original,2)
   
   # Remove hyphens before direction data where it exists
-  original <- gsub('-','',original)
+  original <- gsub('-','_',original)
 
   # Corrects for "Body" being written twice in some cases
   original <- gsub('BodyBody','Body',original)
     
   # Combine to tidy column names
-  new <- as.character(paste(func,domain,original,sep=''))
+  new <- as.character(paste(func,domain,original,sep='_'))
   
   # Return the results
   return(new)
@@ -143,3 +143,6 @@ temp_variables <- c(
 )
 
 rm(list=temp_variables)
+
+### Write the output text file for submission
+write.table(group_summaries, file='group_summaries.txt', row.name=FALSE)
