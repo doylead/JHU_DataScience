@@ -4,7 +4,7 @@
 ### Remove all variables from the workspace
 rm(list=ls())
 
-### Dependency for data.table added for setname
+### Dependency for data.table added for setname, setDT, and aggregation functionality
 library(data.table)
 ### Dependency for plyr added for join (to avoid sorting with merge) 
 library(plyr)
@@ -52,7 +52,7 @@ processed_subject <- total_subject
 setnames(processed_subject, "V1", "subject")
 
 ### Tidy feature names
-reformat <- function(original){
+reformat_feature <- function(original){
   # Determines the function applied - mean or std
   func <- substring(original,
                     regexpr('-.*\\(',original)+1,
@@ -79,10 +79,67 @@ reformat <- function(original){
   return(new)
 }
 
-### Call the reformat() method we just defined to change column names
+### Call the reformat_feature() method we just defined to change column names
 setnames(processed_X,
          names(processed_X),
-         sapply(names(processed_X), reformat))
+         sapply(names(processed_X), reformat_feature))
 
 ### Merge processed_X processed_subject and processed_activity into one matrix
 processed_all <- cbind(processed_X, processed_subject, processed_activity)
+
+### Create a new data frame with averages of processed_all by activity and subject
+processed_all_dt <- setDT(processed_all)
+group_summaries <- processed_all_dt[, lapply(.SD, mean), by=.(activity,subject)]
+
+# group_summaries contains averages of all quantities in processed_X aggregated
+# by subject and activity
+#
+# example output:
+# group_summaries[1:9,1:4]
+#              activity subject meanTimeBodyAccX meanTimeBodyAccY
+# 1:           STANDING       2        0.2779115     -0.018420827
+# 2:            SITTING       2        0.2770874     -0.015687994
+# 3:             LAYING       2        0.2813734     -0.018158740
+# 4:            WALKING       2        0.2764266     -0.018594920
+# 5: WALKING_DOWNSTAIRS       2        0.2776153     -0.022661416
+# 6:   WALKING_UPSTAIRS       2        0.2471648     -0.021412113
+# 7:           STANDING       4        0.2804997     -0.009489111
+# 8:            SITTING       4        0.2715383     -0.007163065
+# 9:             LAYING       4        0.2635592     -0.015003184
+
+### We now rename these columns slightly to account for the summary statistics done
+reformat_aggregate <- function(original){
+  new <- paste('summaryAverage_',original,sep='')
+  return(new)
+}
+
+### Call the reformat_aggregate() method we just defined to change column names
+setnames(group_summaries,
+         names(group_summaries),
+         sapply(names(group_summaries), reformat_aggregate))
+
+### Remove temporary variables, leaving only final results
+temp_variables <- c(
+  'activity_mapping',
+  'activity_names',
+  'processed_activity',
+  'processed_all_dt',
+  'processed_subject',
+  'processed_X',
+  'test_activity',
+  'test_subject',
+  'test_X',
+  'total_activity',
+  'total_subject',
+  'total_X',
+  'train_activity',
+  'train_subject',
+  'train_X',
+  'column_names',
+  'interesting_columns',
+  'reformat_aggregate',
+  'reformat_feature',
+  'temp_variables'
+)
+
+rm(list=temp_variables)
