@@ -10,4 +10,3 @@ Last updated: 3/11/2018
   * script.R - Written by Andrew Doyle, this script will (optionally) download the compressed data file, unzip it, and "clean" the data to me more accessibe and human-readable.  Details of its operation are commented in-line
   * compressed_data.zip - The data downloaded during this exercise as originally compressed
   * UCI HAR Dataset - The data downloaded during this exercise after decompression
-
