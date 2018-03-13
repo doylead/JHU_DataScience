@@ -13,7 +13,7 @@ Each variable has three or four components, separated by underscores, _ :
   * The fourth, if present, represents the axis along which the measurement is taken
 
 ## Feature Description in group_summaries
-Each variable has four or five components, separated by underscores, _ :
+The data presented here is an aggregate of those in processed_all grouped by subject and activity. Each variable has four or five components, separated by underscores, _ :
   * The first argument is "summaryAverage" which describes that these quantities are averages of those in processed_all
   * The remaining arguments are described in the previous section on processed_all (after incrementing their position by one)
 
