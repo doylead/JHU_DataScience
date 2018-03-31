@@ -144,5 +144,6 @@ temp_variables <- c(
 
 rm(list=temp_variables)
 
-### Write the output text file for submission
+### Write the output text files for submission
+write.table(processed_all, file='tidy_data.txt', row.name=FALSE)
 write.table(group_summaries, file='group_summaries.txt', row.name=FALSE)
